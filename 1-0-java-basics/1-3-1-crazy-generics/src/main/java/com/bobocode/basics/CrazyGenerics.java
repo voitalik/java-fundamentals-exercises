@@ -3,6 +3,7 @@ package com.bobocode.basics;
 import com.bobocode.basics.util.BaseEntity;
 import com.bobocode.util.ExerciseNotCompletedException;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -106,7 +107,7 @@ public class CrazyGenerics {
      *
      * @param <T> – the type of objects that can be processed
      */
-    interface StrictProcessor<T extends Serializable> { // todo: make it generic
+    interface StrictProcessor<T extends Serializable & Comparable<T>> { // todo: make it generic
         void process(T obj);
     }
 
@@ -117,10 +118,10 @@ public class CrazyGenerics {
      * @param <T> – a type of the entity that should be a subclass of {@link BaseEntity}
      * @param <C> – a type of any collection
      */
-    interface CollectionRepository { // todo: update interface according to the javadoc
-        void save(Object entity);
+    interface CollectionRepository<T extends BaseEntity, C extends Collection<T>> { // todo: update interface according to the javadoc
+        void save(T entity);
 
-        Collection<Object> getEntityCollection();
+        C getEntityCollection();
     }
 
     /**
