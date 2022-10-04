@@ -106,8 +106,8 @@ public class CrazyGenerics {
      *
      * @param <T> – the type of objects that can be processed
      */
-    interface StrictProcessor { // todo: make it generic
-        void process(Object obj);
+    interface StrictProcessor<T extends Serializable> { // todo: make it generic
+        void process(T obj);
     }
 
     /**
