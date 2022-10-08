@@ -130,7 +130,7 @@ public class CrazyGenerics {
      *
      * @param <T> – a type of the entity that should be a subclass of {@link BaseEntity}
      */
-    interface ListRepository { // todo: update interface according to the javadoc
+    interface ListRepository<T extends BaseEntity> extends CollectionRepository<T, List<T>> { // todo: update interface according to the javadoc
     }
 
     /**
@@ -143,7 +143,13 @@ public class CrazyGenerics {
      *
      * @param <E> a type of collection elements
      */
-    interface ComparableCollection { // todo: refactor it to make generic and provide a default impl of compareTo
+    interface ComparableCollection<E> extends Collection<E>, Comparable<Collection<?>> {
+        // todo: refactor it to make generic and provide a default impl of compareTo
+
+        @Override
+        default int compareTo(Collection<?> o) {
+            return Integer.compare(this.size(), o.size());
+        }
     }
 
     /**
