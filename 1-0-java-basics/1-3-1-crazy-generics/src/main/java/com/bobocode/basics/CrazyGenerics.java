@@ -224,8 +224,10 @@ public class CrazyGenerics {
          * @return optional max value
          */
         // todo: create a method and implement its logic manually without using util method from JDK
-        public static <T> Optional<T> findMax(Iterable<T> elements, Comparator<T> comparator) {
-            return StreamSupport.stream(elements.spliterator(), false)
+        public static <T extends BaseEntity> Optional<T> findMax(Iterable<T> elements,
+                                                                 Comparator<? super T> comparator) {
+            return StreamSupport
+                    .stream(elements.spliterator(), false)
                     .max(comparator);
         }
 
@@ -243,11 +245,8 @@ public class CrazyGenerics {
          */
         // todo: create a method according to JavaDoc and implement it using previous method
         public static <T extends BaseEntity> T findMostRecentlyCreatedEntity(Collection<T> entities) {
-            T result = findMax(entities, (Comparator<T>) CREATED_ON_COMPARATOR).get();
-            if (result != null)
-                return result;
-            else
-                throw new NoSuchElementException();
+            return findMax(entities, CREATED_ON_COMPARATOR)
+                    .orElseThrow();
         }
 
         /**
@@ -259,14 +258,17 @@ public class CrazyGenerics {
          * @param i        index of the element to swap
          * @param j        index of the other element to swap
          */
-        public static void swap(List<Object> elements, int i, int j) {
+        public static void swap(List<?> elements, int i, int j) {
             Objects.checkIndex(i, elements.size());
             Objects.checkIndex(j, elements.size());
-            Object element = elements.get(i);
-            elements.add(i, elements.get(j));
-            elements.add(j, element);
+            swapHelper(elements, i, j);
             //throw new ExerciseNotCompletedException(); // todo: complete method implementation
         }
 
+        private static <T> void swapHelper(List<T> list, int i, int j) {
+            T element = list.get(i);
+            list.add(i, list.get(j));
+            list.add(j, element);
+        }
     }
 }
