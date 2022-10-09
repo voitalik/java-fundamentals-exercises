@@ -259,13 +259,13 @@ public class CrazyGenerics {
          * @param i        index of the element to swap
          * @param j        index of the other element to swap
          */
-        public static void swap(List elements, int i, int j) {
+        public static void swap(List<Object> elements, int i, int j) {
             Objects.checkIndex(i, elements.size());
             Objects.checkIndex(j, elements.size());
             Object element = elements.get(i);
             elements.add(i, elements.get(j));
             elements.add(j, element);
-            throw new ExerciseNotCompletedException(); // todo: complete method implementation
+            //throw new ExerciseNotCompletedException(); // todo: complete method implementation
         }
 
     }
