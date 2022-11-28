@@ -85,7 +85,27 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V put(K key, V value) {
-        throw new ExerciseNotCompletedException(); // todo:
+        if (size == thresHold) {
+            resizeTable((int) (size * loadFactor));
+        }
+        int index = calculateIndex(key, capacity);
+        Node<K, V> newNode = new Node<>(key, value);
+        if (table[index] == null) {
+            table[index] = newNode;
+            size++;
+            return newNode.value;
+        }
+        Node<K, V> current = table[index];
+        while (current.next != null) {
+            if (Objects.equals(current.key, key)) {
+                current.value = value;
+                return value;
+            }
+            current = current.next;
+        }
+        current.next = newNode;
+        size++;
+        return newNode.value;
     }
 
     /**
@@ -97,7 +117,19 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new ExerciseNotCompletedException(); // todo:
+        for (Node<K, V> node : table) {
+            if (node != null) {
+                int index = calculateIndex(node.key, capacity);
+                    Node<K, V> current = table[index];
+                    while (current.next != null) {
+                        if (Objects.equals(current.key, node.key)) {
+                            return node.value;
+                        }
+                        current = current.next;
+                    }
+                }
+            }
+        return null;
     }
 
     /**
@@ -193,7 +225,25 @@ public class HashTable<K, V> implements Map<K, V> {
      * @param newCapacity a size of the new underlying array
      */
     public void resizeTable(int newCapacity) {
-        throw new ExerciseNotCompletedException(); // todo:
+        capacity = newCapacity;
+        Node<K, V>[] newTable = (Node<K, V>[]) new Node[capacity];
+        for (Node<K, V> node : table) {
+            if (node != null) {
+                int index = calculateIndex(node.key, capacity);
+                if (newTable[index] == null) {
+                    newTable[index] = node;
+                } else {
+                    Node<K, V> current = newTable[index];
+                    while (current.next != null) {
+                        if (Objects.equals(current.key, node.key)) {
+                            current.value = node.value;
+                        }
+                        current = current.next;
+                    }
+                }
+            }
+        }
+        table = newTable;
     }
 
     private static class Node<K, V> {
