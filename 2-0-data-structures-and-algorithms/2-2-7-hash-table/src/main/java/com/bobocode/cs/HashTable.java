@@ -90,23 +90,18 @@ public class HashTable<K, V> implements Map<K, V> {
         }
         int index = calculateIndex(key, capacity);
         Node<K, V> newNode = new Node<>(key, value);
-        if (table[index] == null) {
+        Node<K, V> node = findNode(key);
+        if (node == null) {
             table[index] = newNode;
             size++;
             return null;
         }
-        Node<K, V> current = table[index];
-        Node<K, V> prev = current;
-        while (current != null) {
-            prev = current;
-            if (Objects.equals(current.key, key)) {
-                V currentValue = current.value;
-                current.value = value;
-                return currentValue;
-            }
-            current = current.next;
+        if (Objects.equals(node.key, key)) {
+            V returnedValue = node.value;
+            node.value = value;
+            return returnedValue;
         }
-        prev.next = newNode;
+        node.next = newNode;
         size++;
         return null;
     }
@@ -120,14 +115,34 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
+        Node<K, V> node = findNode(key);
+        if (node == null) {
+            return null;
+        }
+        if (Objects.equals(node.key, key)) {
+            return node.value;
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param key
+     * @return if result == null, it's head of list
+     *         if result.next == null, it's last element of list
+     *
+     */
+    private Node<K, V> findNode(K key) {
         Node<K, V> current = table[calculateIndex(key, capacity)];
+        Node<K, V> prev = current;
         while (current != null) {
+            prev = current;
             if (Objects.equals(current.key, key)) {
-                return current.value;
+                return prev;
             }
             current = current.next;
         }
-        return null;
+        return prev;
     }
 
     /**
