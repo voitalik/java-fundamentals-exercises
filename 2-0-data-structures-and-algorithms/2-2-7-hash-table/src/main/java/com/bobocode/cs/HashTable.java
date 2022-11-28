@@ -2,6 +2,9 @@ package com.bobocode.cs;
 
 import com.bobocode.util.ExerciseNotCompletedException;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 /**
  * {@link HashTable} is a simple Hashtable-based implementation of {@link Map} interface with some additional methods.
  * It is based on the array of {@link Node} objects. Both {@link HashTable} and {@link Node} have two type parameters:
@@ -27,6 +30,29 @@ import com.bobocode.util.ExerciseNotCompletedException;
  * @author Taras Boychuk
  */
 public class HashTable<K, V> implements Map<K, V> {
+    private final static int DEFAULT_CAPACITY = 8;
+    private final static float DEFAULT_LOAD_FACTOR = 0.75f;
+    private final static int DEFAULT_THRESHOLD = (int) (DEFAULT_CAPACITY * DEFAULT_LOAD_FACTOR);
+
+    private Node<K, V>[] table;
+    private int capacity;
+    private float loadFactor;
+    private int thresHold;
+    private int size = 0;
+
+    public HashTable() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    public HashTable(int capacity) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity could not be negative");
+        }
+        this.capacity = capacity;
+        loadFactor = DEFAULT_LOAD_FACTOR;
+        thresHold = DEFAULT_THRESHOLD;
+        table = (Node<K, V>[]) new Node[capacity];
+    }
 
     /**
      * This method is a critical part of the hast table. The main idea is that having a key, you can calculate its index
@@ -43,7 +69,7 @@ public class HashTable<K, V> implements Map<K, V> {
      * @return array index of the given key
      */
     public static int calculateIndex(Object key, int tableCapacity) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return Math.abs(Objects.hashCode(key) % tableCapacity);
     }
 
     /**
@@ -103,7 +129,7 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public int size() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return size;
     }
 
     /**
@@ -113,7 +139,7 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public boolean isEmpty() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return size == 0;
     }
 
     /**
@@ -168,5 +194,16 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     public void resizeTable(int newCapacity) {
         throw new ExerciseNotCompletedException(); // todo:
+    }
+
+    private static class Node<K, V> {
+        final K key;
+        V value;
+        Node<K, V> next;
+
+        Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 }
