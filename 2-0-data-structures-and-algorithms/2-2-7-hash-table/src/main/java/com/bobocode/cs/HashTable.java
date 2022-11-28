@@ -93,19 +93,22 @@ public class HashTable<K, V> implements Map<K, V> {
         if (table[index] == null) {
             table[index] = newNode;
             size++;
-            return newNode.value;
+            return null;
         }
         Node<K, V> current = table[index];
-        while (current.next != null) {
+        Node<K, V> prev = current;
+        while (current != null) {
+            prev = current;
             if (Objects.equals(current.key, key)) {
+                V currentValue = current.value;
                 current.value = value;
-                return value;
+                return currentValue;
             }
             current = current.next;
         }
-        current.next = newNode;
+        prev.next = newNode;
         size++;
-        return newNode.value;
+        return null;
     }
 
     /**
@@ -117,18 +120,13 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        for (Node<K, V> node : table) {
-            if (node != null) {
-                int index = calculateIndex(node.key, capacity);
-                    Node<K, V> current = table[index];
-                    while (current.next != null) {
-                        if (Objects.equals(current.key, node.key)) {
-                            return node.value;
-                        }
-                        current = current.next;
-                    }
-                }
+        Node<K, V> current = table[calculateIndex(key, capacity)];
+        while (current != null) {
+            if (Objects.equals(current.key, key)) {
+                return current.value;
             }
+            current = current.next;
+        }
         return null;
     }
 
@@ -208,7 +206,7 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public String toString() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return "";
     }
 
     /**
