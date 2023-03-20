@@ -1,7 +1,6 @@
 package com.bobocode.cs;
 
 import com.bobocode.cs.exception.EmptyStackException;
-import com.bobocode.util.ExerciseNotCompletedException;
 
 /**
  * {@link LinkedStack} is a stack implementation that is based on singly linked generic nodes.
@@ -15,6 +14,8 @@ import com.bobocode.util.ExerciseNotCompletedException;
  * @author Serhii Hryhus
  */
 public class LinkedStack<T> implements Stack<T> {
+    private int size;
+    private Node<T> first;
 
     /**
      * This method creates a stack of provided elements
@@ -24,7 +25,11 @@ public class LinkedStack<T> implements Stack<T> {
      * @return a new stack of elements that were passed as method parameters
      */
     public static <T> LinkedStack<T> of(T... elements) {
-        throw new ExerciseNotCompletedException(); // todo: implement this method
+        LinkedStack<T> stack = new LinkedStack<>();
+        for (T element : elements) {
+            stack.push(element);
+        }
+        return stack;
     }
 
     /**
@@ -35,7 +40,10 @@ public class LinkedStack<T> implements Stack<T> {
      */
     @Override
     public void push(T element) {
-        throw new ExerciseNotCompletedException(); // todo: implement this method
+        if (element == null)
+            throw new NullPointerException();
+        first = new Node<>(element, first);
+        size++;
     }
 
     /**
@@ -47,7 +55,12 @@ public class LinkedStack<T> implements Stack<T> {
      */
     @Override
     public T pop() {
-        throw new ExerciseNotCompletedException(); // todo: implement this method
+        if (size == 0)
+            throw new EmptyStackException();
+        T value = first.item;
+        first = first.next;
+        size--;
+        return value;
     }
 
     /**
@@ -57,7 +70,7 @@ public class LinkedStack<T> implements Stack<T> {
      */
     @Override
     public int size() {
-        throw new ExerciseNotCompletedException(); // todo: implement this method
+        return size;
     }
 
     /**
@@ -67,7 +80,17 @@ public class LinkedStack<T> implements Stack<T> {
      */
     @Override
     public boolean isEmpty() {
-        throw new ExerciseNotCompletedException(); // todo: implement this method;
+        return size == 0;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+
+        public Node(T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+        }
     }
 
 }
